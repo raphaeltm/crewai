@@ -1,0 +1,21 @@
+name: Defang Down
+
+on:
+  workflow_dispatch:
+
+jobs:
+  teardown:
+    environment: playground
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v4
+
+    - name: Defang Down
+      uses: DefangLabs/defang-github-action@v1.3.2
+      with:
+        command: "compose down"
