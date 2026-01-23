@@ -109,6 +109,18 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(59, 130, 246, 0.2);
         }
+        
+        /* Respect reduced motion preferences */
+        @media (prefers-reduced-motion: reduce) {
+            .gradient-orb {
+                animation: none;
+            }
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
     </style>
 </head>
 <body class="min-h-screen min-w-screen flex items-center justify-center">
@@ -128,7 +140,7 @@
                         alt="Defang Logo"
                         class="max-w-[200px] w-full h-auto"
                     />
-                    <p class="text-center text-sm md:text-base text-blue-600 dark:text-blue-400 font-medium animate-pulse">
+                    <p class="text-center text-sm md:text-base text-blue-600 dark:text-blue-400 font-medium">
                         ✨ I deployed this to AWS with Defang without ever leaving my browser in 10min
                     </p>
                 </div>
@@ -177,10 +189,15 @@
 <script>
 (function() {
     // --- Light/Dark Mode Detection ---
-    const darkModeMediaQuery = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+    const darkModeMediaQuery = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
     
     function updateTheme() {
-        const isDark = darkModeMediaQuery && darkModeMediaQuery.matches;
+        if (!darkModeMediaQuery) {
+            // Default to dark mode if matchMedia not supported
+            document.body.classList.remove('light-mode');
+            return;
+        }
+        const isDark = darkModeMediaQuery.matches;
         if (!isDark) {
             document.body.classList.add('light-mode');
         } else {
