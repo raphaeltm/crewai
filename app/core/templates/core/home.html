@@ -6,36 +6,146 @@
     {% load static %}
     <!-- If Tailwind is available via CDN or staticfiles, include it here -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Animated blue glowing gradient background */
+        @keyframes gradientRotate {
+            0% {
+                transform: rotate(0deg) scale(1.5);
+            }
+            50% {
+                transform: rotate(180deg) scale(1.7);
+            }
+            100% {
+                transform: rotate(360deg) scale(1.5);
+            }
+        }
+        
+        @keyframes glowPulse {
+            0%, 100% {
+                opacity: 0.4;
+                filter: blur(60px);
+            }
+            50% {
+                opacity: 0.7;
+                filter: blur(80px);
+            }
+        }
+        
+        @keyframes glowPulse2 {
+            0%, 100% {
+                opacity: 0.3;
+                filter: blur(70px);
+            }
+            50% {
+                opacity: 0.6;
+                filter: blur(90px);
+            }
+        }
+        
+        .space-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+        
+        .gradient-orb {
+            position: absolute;
+            border-radius: 50%;
+            animation: gradientRotate 20s linear infinite;
+        }
+        
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.5) 0%, rgba(37, 99, 235, 0.3) 30%, transparent 70%);
+            top: -200px;
+            left: -200px;
+            animation: gradientRotate 20s linear infinite, glowPulse 8s ease-in-out infinite;
+        }
+        
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(96, 165, 250, 0.4) 0%, rgba(59, 130, 246, 0.2) 40%, transparent 70%);
+            bottom: -150px;
+            right: -150px;
+            animation: gradientRotate 25s linear infinite reverse, glowPulse2 10s ease-in-out infinite;
+        }
+        
+        .orb-3 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(147, 197, 253, 0.3) 0%, rgba(96, 165, 250, 0.15) 50%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: gradientRotate 30s linear infinite, glowPulse 12s ease-in-out infinite;
+        }
+        
+        /* Light mode background */
+        body.light-mode .space-bg {
+            background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 50%, #dbeafe 100%);
+        }
+        
+        /* Dark mode background */
+        body:not(.light-mode) .space-bg {
+            background: linear-gradient(135deg, #0f172a 0%, #020617 50%, #0c1222 100%);
+        }
+        
+        /* Content glow effect */
+        .content-glow {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        body.light-mode .content-glow {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+    </style>
 </head>
-<body class="min-h-screen min-w-screen bg-gray-50 dark:bg-black flex items-center justify-center">
-    <div class="w-full max-w-5xl mx-auto flex flex-col md:flex-row gap-8 p-4 md:p-8">
+<body class="min-h-screen min-w-screen flex items-center justify-center">
+    <!-- Space-themed animated background -->
+    <div class="space-bg">
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+    </div>
+    <div class="w-full max-w-5xl mx-auto flex flex-col md:flex-row gap-8 p-4 md:p-8 relative z-10">
         <!-- Left column: input, logo, docs, status -->
         <div class="flex-1 flex flex-col gap-6 md:max-w-md">
-            <div class="flex flex-row items-center justify-between gap-4">
-                <div class="flex-1 flex justify-center items-center">
+            <div class="flex flex-col items-center gap-4">
+                <div class="flex flex-col items-center gap-2">
                     <img
                         src="https://raw.githubusercontent.com/DefangLabs/defang-assets/refs/heads/main/images/logos/logos-with-workmarks/title/defang-title-dark-colour-large.png"
                         alt="Defang Logo"
                         class="max-w-[200px] w-full h-auto"
                     />
+                    <p class="text-center text-sm md:text-base text-blue-600 dark:text-blue-400 font-medium animate-pulse">
+                        ✨ I deployed this to AWS with Defang without ever leaving my browser in 10min
+                    </p>
                 </div>
-                <div class="flex-1 flex justify-center items-center">
-                    <a
-                        href="https://docs.defang.io/docs/intro"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="text-blue-600 hover:underline text-base text-center"
-                    >
-                        Defang Documentation
-                    </a>
-                </div>
+                <a
+                    href="https://docs.defang.io/docs/intro"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-blue-600 dark:text-blue-400 hover:underline text-base text-center"
+                >
+                    Defang Documentation
+                </a>
             </div>
-            <form id="ws-form" class="flex flex-col gap-4 border border-gray-200 dark:border-gray-800 rounded-lg p-4 bg-white dark:bg-black/40">
-                <label for="ws-input" class="font-semibold text-lg mb-1">Summarize your text:</label>
+            <form id="ws-form" class="flex flex-col gap-4 content-glow rounded-lg p-4">
+                <label for="ws-input" class="font-semibold text-lg mb-1 text-gray-900 dark:text-white">Summarize your text:</label>
                 <textarea
                     id="ws-input"
                     placeholder="Paste or type your text here to be summarized..."
-                    class="flex-1 px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-400 dark:bg-black/60 dark:text-white min-h-[100px] resize-y"
+                    class="flex-1 px-3 py-2 border rounded focus:outline-none focus:ring focus:border-blue-400 bg-white/90 dark:bg-black/60 text-gray-900 dark:text-white min-h-[100px] resize-y"
                     aria-label="Text to summarize"
                     rows="5"
                     required
@@ -57,7 +167,7 @@
         </div>
         <!-- Right column: messages -->
         <div class="flex-1 flex flex-col">
-            <div class="font-semibold text-lg mb-2">Messages from backend:</div>
+            <div class="font-semibold text-lg mb-2 text-gray-900 dark:text-white">Messages from backend:</div>
             <div id="ws-messages" class="flex flex-col gap-2 max-h-[500px] overflow-y-auto pr-2">
                 <ul id="ws-messages-list" class="flex flex-col gap-3"></ul>
             </div>
@@ -65,6 +175,21 @@
     </div>
 <script>
 (function() {
+    // --- Light/Dark Mode Detection ---
+    function updateTheme() {
+        const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (!isDark) {
+            document.body.classList.add('light-mode');
+        } else {
+            document.body.classList.remove('light-mode');
+        }
+    }
+    updateTheme();
+    // Listen for theme changes
+    if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateTheme);
+    }
+
     // --- Configuration ---
     // Dynamically build wsUrl based on current page origin
     const wsScheme = window.location.protocol === "https:" ? "wss" : "ws";
@@ -130,7 +255,7 @@
             }
             // Outer li
             const li = document.createElement('li');
-            li.className = "flex flex-col gap-1 border border-gray-200 dark:border-gray-700 rounded p-3 bg-white dark:bg-gray-900 shadow-sm";
+            li.className = "flex flex-col gap-1 content-glow rounded p-3 shadow-sm";
             // Status tag
             const tag = document.createElement('span');
             tag.className = `inline-block text-xs font-semibold px-2 py-0.5 rounded border ${statusTagColor(status)}`;
