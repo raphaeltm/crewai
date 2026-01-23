@@ -56,6 +56,7 @@
             position: absolute;
             border-radius: 50%;
             animation: gradientRotate 20s linear infinite;
+            will-change: transform, opacity;
         }
         
         .orb-1 {
@@ -176,8 +177,10 @@
 <script>
 (function() {
     // --- Light/Dark Mode Detection ---
+    const darkModeMediaQuery = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+    
     function updateTheme() {
-        const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const isDark = darkModeMediaQuery && darkModeMediaQuery.matches;
         if (!isDark) {
             document.body.classList.add('light-mode');
         } else {
@@ -186,8 +189,8 @@
     }
     updateTheme();
     // Listen for theme changes
-    if (window.matchMedia) {
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateTheme);
+    if (darkModeMediaQuery) {
+        darkModeMediaQuery.addEventListener('change', updateTheme);
     }
 
     // --- Configuration ---
